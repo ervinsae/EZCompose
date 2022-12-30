@@ -10,11 +10,13 @@ import androidx.activity.compose.setContent
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material.Button
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
@@ -77,7 +79,9 @@ fun Greeting(name: Message) {
         )
 
         // TODO: 怎么让column中元素居中，这里text和垂直居中？
-        Column(verticalArrangement = Arrangement.Center) {
+        Column(verticalArrangement = Arrangement.Center,
+            //modifier = Modifier.fillMaxWidth().padding(24.dp)
+        ) {
             Text(text = "Hello ${name.first}! Compose",
                 style = MaterialTheme.typography.subtitle2
             )
@@ -87,10 +91,12 @@ fun Greeting(name: Message) {
             Surface(shape = MaterialTheme.shapes.medium,
                     elevation = 1.dp,
                     color = surfaceColor,
-                    modifier = Modifier.animateContentSize().padding(1.dp)
+                    modifier = Modifier
+                        .animateContentSize()
+                        .padding(1.dp)
                 ) {
                 Text(text = "${name.second}",
-                    modifier = Modifier.padding(all = 4.dp),
+                    modifier = Modifier.padding(0.dp, 4.dp, 0.dp ,0.dp),
                     fontSize = 10.sp,
                     maxLines = if (isClicked) 99 else 1,
                     color = MaterialTheme.colors.secondaryVariant,
@@ -106,6 +112,9 @@ fun Conversation(message: List<Message>) {
     LazyColumn {
         message.map { item { Greeting(name = it) } }
     }
+    /*for (name in message) {
+        Greeting(name = name)
+    }*/
 }
 
 @Preview(showBackground = true)
