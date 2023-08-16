@@ -63,9 +63,17 @@ fun Greeting(name: Message) {
     val surfaceColor by animateColorAsState(targetValue =
         if (isClicked) MaterialTheme.colors.secondary else MaterialTheme.colors.surface
     )
+    //如需在 Row 中设置子项的位置，请设置 horizontalArrangement 和 verticalAlignment 参数。
+    // 对于 Column，请设置 verticalArrangement 和 horizontalAlignment 参数：
+    /**
+     * arrangement: 布局方式
+     * alignment: 对齐方式
+     */
     Row(modifier = Modifier
         .padding(all = 16.dp)
-        .clickable { isClicked = !isClicked }) {
+        .clickable { isClicked = !isClicked },
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.End) {
 
         Image(painter = painterResource(id = R.drawable.app),
             contentDescription = "app",
