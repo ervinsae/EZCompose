@@ -1,6 +1,7 @@
 package com.example.ezcomposetutorial
 
 import android.content.Context
+import android.content.Intent
 import android.content.res.Configuration
 import android.os.Bundle
 import android.view.Surface
@@ -16,21 +17,21 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material.Button
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Surface
-import androidx.compose.material.Text
+import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.VerticalAlignmentLine
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.view.WindowCompat
+import com.example.ezcomposetutorial.basicLayoutsCodelab.MainActivity01
 import com.example.ezcomposetutorial.ui.theme.EZComposeTutorialTheme
 import java.security.AccessController.getContext
 
@@ -41,10 +42,13 @@ class MainActivity : ComponentActivity() {
         setContent {
             EZComposeTutorialTheme {
                 // A surface container using the 'background' color from the theme
-                Surface(modifier = Modifier.fillMaxSize(),
+                Surface(modifier = Modifier.fillMaxHeight(),
                     color = MaterialTheme.colors.background) {
                     //Greeting(Message("Android", "Compose"))
-                    Conversation(message = SampleData.conversationSample)
+                    Column {
+                        TitleBar(title = "HOME")
+                        Conversation(message = SampleData.conversationSample)
+                    }
                 }
             }
         }
@@ -52,6 +56,16 @@ class MainActivity : ComponentActivity() {
 }
 
 data class Message(var first: String, var second: String)
+
+@Composable
+fun TitleBar(title: String, modifier: Modifier = Modifier, color: Color = Color.Red) {
+    
+    TextField(value = title,
+        onValueChange = {},
+        modifier = modifier
+            .fillMaxWidth()
+            .heightIn(min = 56.dp))
+}
 
 @Composable
 fun Greeting(name: Message) {
@@ -63,6 +77,9 @@ fun Greeting(name: Message) {
     val surfaceColor by animateColorAsState(targetValue =
         if (isClicked) MaterialTheme.colors.secondary else MaterialTheme.colors.surface
     )
+
+    //在activity中获取context
+    val context = LocalContext.current
     //如需在 Row 中设置子项的位置，请设置 horizontalArrangement 和 verticalAlignment 参数。
     // 对于 Column，请设置 verticalArrangement 和 horizontalAlignment 参数：
     /**
@@ -71,7 +88,12 @@ fun Greeting(name: Message) {
      */
     Row(modifier = Modifier
         .padding(all = 16.dp)
-        .clickable { isClicked = !isClicked },
+        .clickable {
+            isClicked = !isClicked;
+            //Toast.makeText(context, "acb", Toast.LENGTH_LONG).show()
+            val intent = Intent(context, MainActivity01::class.java)
+            context.startActivity(intent)
+        },
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.End) {
 

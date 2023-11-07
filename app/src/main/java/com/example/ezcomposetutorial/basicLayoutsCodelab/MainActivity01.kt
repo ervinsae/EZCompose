@@ -1,5 +1,6 @@
 package com.example.ezcomposetutorial.basicLayoutsCodelab
 
+import android.content.Intent
 import android.content.res.Configuration
 import android.os.Bundle
 import android.widget.Space
@@ -8,24 +9,28 @@ import androidx.activity.compose.setContent
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.*
+import androidx.compose.material.MaterialTheme.colors
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Search
+import androidx.compose.runtime.*
 
-import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.Placeholder
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.example.ezcomposetutorial.DefaultPreview
 import com.example.ezcomposetutorial.R
 import com.example.ezcomposetutorial.ui.theme.EZComposeTutorialTheme
 
@@ -40,9 +45,13 @@ class MainActivity01 : ComponentActivity() {
 
         setContent {
             EZComposeTutorialTheme() {
-                Surface(modifier = Modifier.fillMaxSize(),
+                Surface(modifier = Modifier.wrapContentHeight(),
                     color = MaterialTheme.colors.surface) {
-                    SearchBar()
+                    Column() {
+                        SearchBar()
+                        DefaultPreview()
+                    }
+
                 }
             }
         }
@@ -52,10 +61,21 @@ class MainActivity01 : ComponentActivity() {
     fun SearchBar(
         modifier: Modifier = Modifier,
     ) {
-
+        //在activity中获取context
+        val context = LocalContext.current
+        var text by remember {
+            mutableStateOf("")
+        }
         TextField(
-            value = "",
-            onValueChange = {},
+            value = text,
+            onValueChange = {
+                text = it
+                if (it == "aaa") {
+
+                    val intent = Intent(context, TitleBarActivity::class.java)
+                    context.startActivity(intent)
+                }
+            },
             leadingIcon = {
                 Icon(
                     imageVector = Icons.Default.Search,
@@ -129,16 +149,20 @@ class MainActivity01 : ComponentActivity() {
     }
 
     @Composable
-    fun AlignYourBodyRow(modifier: Modifier = Modifier) {
-        LazyRow(modifier = modifier,
+    fun AlignYourBodyRow(modifier: Modifier = Modifier, onClick: (DrawableStringPair) -> Unit) {
+        //modifier的配置也可以写在AlignYourBodyRow调用处(尝试了下，不行，没有效果？)
+        LazyRow(modifier = modifier.padding(0.dp,16.dp,0.dp,0.dp).fillMaxHeight(),
             horizontalArrangement = Arrangement.spacedBy(8.dp)) {
             items(alignYourBodyData) {
-                item ->  AlignYourBodyElement(drawableRes = item.drawable, title = item.text)
+                //item的click事件
+                item ->  Row(modifier = Modifier.clickable { onClick(item) }) {
+                    AlignYourBodyElement(drawableRes = item.drawable, title = item.text)
+                }
             }
         }
     }
 
-    private data class DrawableStringPair(
+    data class DrawableStringPair(
         @DrawableRes val drawable: Int,
         val text: String
     )
@@ -160,12 +184,18 @@ class MainActivity01 : ComponentActivity() {
     )
     @Composable
     fun DefaultPreview() {
+
+
         EZComposeTutorialTheme {
+            AlignYourBodyRow(modifier = Modifier.padding(8.dp), onClick = {
+                this.startActivity(Intent(this, TitleBarActivity::class.java))
+            })
+
             //AlignYourBodyElement(modifier = Modifier.padding(8.dp), R.drawable.ab1_inversions, "Inversion")
 
             //FavoriteCollectionCard(modifier = Modifier.padding(8.dp), R.drawable.fc2_nature_meditations, "NM")
 
-            AlignYourBodyRow(modifier = Modifier.padding(8.dp))
+
         }
     }
 }

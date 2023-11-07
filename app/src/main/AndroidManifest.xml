@@ -29,6 +29,7 @@
         </activity>
 
         <activity android:name=".basicLayoutsCodelab.MainActivity01"/>
+        <activity android:name=".basicLayoutsCodelab.TitleBarActivity"/>
     </application>
 
 </manifest>
